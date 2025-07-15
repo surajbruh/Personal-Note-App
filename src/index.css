@@ -7,3 +7,23 @@
         box-sizing: border-box;
     }
 }
+
+.form,
+.task {
+    box-shadow: -1px 3px 31px -11px rgba(0, 0, 0, 0.51);
+    -webkit-box-shadow: -1px 3px 31px -11px rgba(0, 0, 0, 0.51);
+    -moz-box-shadow: -1px 3px 31px -11px rgba(0, 0, 0, 0.51);
+}
+
+.note{
+    margin: auto;
+    border-radius: 8px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-color: #242424;
+    width: 30%;
+    height: 80%;
+}
