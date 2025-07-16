@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useMemo } from "react"
+import { useEffect, useState } from "react"
 import Note from "./components/Note"
 
 export default function App() {
@@ -12,6 +12,9 @@ export default function App() {
   const [notes, setNotes] = useState([])
 
   const [click, setClick] = useState(false)
+
+  const [selectedNote, setSelectedNote] = useState(null)
+
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -53,9 +56,9 @@ export default function App() {
 
   }, [])
 
-  const handleClick = async (e) => {
+  const handleClick = async (note) => {
+    setSelectedNote(note)
     setClick(!click)
-
   }
 
   return (
@@ -95,17 +98,19 @@ export default function App() {
                     className="list-none">
                     <div
                       data-note_id={e._id}
-                      onClick={handleClick}
+                      onClick={() => handleClick(e)}
                       className="task min-w-[300px] p-4 rounded-[8px] bg-[#242424] hover:bg-[#292929]">
                       <h1 className=" text-2xl leading-[24px] overflow-ellipsis overflow-hidden text-nowrap font-bold p-2">{e.title}</h1>
                       <p className="p-2 leading-[18px] w-full h-[250px] overflow-ellipsis overflow-hidden my-2 ">{e.description}</p>
-                      <button className="px-3 py-2 border rounded-[50px]">read more</button>
+                      <a href="">
+                        <button className="px-3 py-2 border rounded-[50px]">read more</button>
+                      </a>
                     </div>
                   </li>
                 )
               })
             }
-            {click && <Note />}
+            {click && <Note note={selectedNote} />}
 
           </div>
         </div>

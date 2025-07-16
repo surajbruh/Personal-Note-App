@@ -1,37 +1,109 @@
-import { useState } from "react"
+import { useRef, useState } from "react"
 
-const Note = ({ noteTitle, noteDescription }) => {
+export default function Note({ note }) {
 
-    const [title, setTitle] = useState("")
-    const [description, setDescription] = useState("")
+    const url = "http://localhost:3000/"
+
+    const [title, setTitle] = useState(note.title)
+    const [description, setDescription] = useState(note.description)
+
+    const [edit, setEdit] = useState(false)
+
+    const inputRef = useRef(null)
+    const descriptionRef = useRef(null)
+
+    const handleClick = (e) => {
+        // e.preventDefault()
+        setEdit(!edit)
+        console.log(e)
+        console.log(note._id)
+        inputRef.current.removeAttribute('disabled')
+        descriptionRef.current.removeAttribute('disabled')
+    }
+
+    const handleSubmit = async (e) => {
+        const newForm = {
+            id: note._id,
+            title: title,
+            description: description
+        }
+        console.log(newForm)
+
+        try {
+            const response = await fetch(url, {
+                method: "PATCH",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id: note._id,
+                    title: title,
+                    description: description
+                })
+            })
+            const data = await response.json()
+            console.log(data)
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    const removeItem = async (e) => {
+        console.log(note._id)
+
+        try {
+            const response = await fetch(url, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id: note._id,
+                })
+            })
+            const data = await response.json()
+            console.log(data)
+        } catch (error) {
+            console.error(error)
+        }
+    }
 
     return (
         <form
-            // onSubmit={handleSubmit}
-            className="note form text-white bg-[#242424] rounded-[8px] p-4 w-1/2 flex flex-col gap-2">
+            onSubmit={handleSubmit}
+            action=""
+            className="note-details fixed top-4 right-4 w-[400px] p-4 bg-white text-black rounded-lg shadow-xl">
             <input
-                className="outline-none text-3xl font-bold p-2 placeholder:text-gray-500"
+                ref={inputRef}
+                disabled
                 onChange={(e) => setTitle(e.target.value)}
-                value={noteTitle}
-                name="title"
-                type="text"
-                placeholder="Title" />
+                className="text-2xl font-bold mb-2"
+                value={title}
+                type="text" />
             <textarea
-                className="outline-none p-2 placeholder:text-gray-500 resize-none overflow-y-hidden"
-                onChange={(e) => {
-                    setDescription(e.target.value)
-                    e.target.style.height = "auto";
-                    e.target.style.height = e.target.scrollHeight + "px";
-                }}
-                value={noteDescription}
-                name="description"
-                id=""
-                placeholder="Description"></textarea>
-            {/* <input
-                type="submit"
-                className="w-max px-4 py-2 border" /> */}
+                ref={descriptionRef}
+                disabled
+                onChange={(e) => setDescription(e.target.value)}
+                className="text-md"
+                name=""
+                value={description}
+                id=""></textarea>
+            <input
+                className="w-max px-4 py-2 border"
+                value="edit"
+                type="button"
+                onClick={handleClick} />
+            {
+                edit &&
+                <input
+                    type="submit"
+                    className="w-max px-4 py-2 border" />
+            }
+            {
+                <button
+                    onClick={removeItem}
+                    className="w-max px-4 py-2 border">Delete</button>
+            }
         </form>
     )
 }
-
-export default Note
