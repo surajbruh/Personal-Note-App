@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react"
 import Note from "./components/Note"
+import { ToastContainer } from "react-toastify"
+import { notifyNew, notifyErr } from "./utilities/toast"
 
 export default function App() {
 
@@ -32,7 +34,11 @@ export default function App() {
       })
       const res = await data.json()
       console.log(res)
+      res.message === "success" ? notifyNew() : notifyErr()
       fetchData() //adds the newly added notes in the task section
+      e.target.querySelector('input').value = ""
+      e.target.querySelector('textarea').value = ""
+
     } catch (err) {
       console.error(err)
     }
@@ -63,18 +69,30 @@ export default function App() {
 
   return (
     <>
-      <div className="wrapper w-screen min-h-screen p-4 bg-[#191919] border-white flex gap-4 relative">
+      <div className="wrapper w-screen min-h-screen h-screen bg-[var(--bg-color)] relative border-white p-4 flex">
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick={false}
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="dark"
+        />
         <form
           onSubmit={handleSubmit}
-          className="form text-white bg-[#242424] rounded-[8px] p-4 w-1/2 flex flex-col gap-2">
+          className="border p-4 form text-[var(--text)] bg-[var(--color-1)] flex flex-col gap-2 w-1/3 h-full relative">
           <input
-            className="outline-none text-5xl font-bold p-2 placeholder:text-gray-500"
+            className="outline-none text-(length:--text-size1) font-bold p-2 placeholder:text-gray-500"
             onChange={(e) => setTitle(e.target.value)}
             name="title"
             type="text"
             placeholder="Title" />
           <textarea
-            className="outline-none p-2 placeholder:text-gray-500 resize-none overflow-y-hidden"
+            className="h-full outline-none p-2 placeholder:text-gray-500 resize-none overflow-y-hidden text-(length:--text-size4)"
             onChange={(e) => {
               setDescription(e.target.value)
               e.target.style.height = "auto";
@@ -85,11 +103,11 @@ export default function App() {
             placeholder="Description"></textarea>
           <input
             type="submit"
-            className="w-max px-4 py-2 border" />
+            className="w-max px-4 py-2 border absolute right-0 top-0 m-4" />
         </form>
-        <div className="tasks text-white flex flex-col w-full gap-4 p-4">
-          <h1 className="w-max text-3xl font-bold">NOTES</h1>
-          <div className="task flex flex-wrap gap-4">
+        <div className="tasks mx-4 text-[var(--text)] flex flex-col w-full gap-4 p-4">
+          <h1 className="w-max text-(length:--text-size2) font-bold">NOTES</h1>
+          <div className="task flex flex-col gap-2 p-2 min-w-[300px] w-1/3">
             {
               notes.map((e, i) => {
                 return (
@@ -99,12 +117,9 @@ export default function App() {
                     <div
                       data-note_id={e._id}
                       onClick={() => handleClick(e)}
-                      className="task min-w-[300px] p-4 rounded-[8px] bg-[#242424] hover:bg-[#292929]">
-                      <h1 className=" text-2xl leading-[24px] overflow-ellipsis overflow-hidden text-nowrap font-bold p-2">{e.title}</h1>
-                      <p className="p-2 leading-[18px] w-full h-[250px] overflow-ellipsis overflow-hidden my-2 ">{e.description}</p>
-                      <a href="">
-                        <button className="px-3 py-2 border rounded-[50px]">read more</button>
-                      </a>
+                      className="task bg-[var(--color-1)] p-4 flex justify-between items-center">
+                      <span className=" text-(length:--text-size3) leading-[24px] overflow-ellipsis overflow-hidden text-nowrap font-bold">{e.title}</span>
+                      <span>date</span>
                     </div>
                   </li>
                 )

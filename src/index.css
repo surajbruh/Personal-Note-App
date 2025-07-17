@@ -6,7 +6,21 @@
         padding: 0;
         box-sizing: border-box;
     }
+
+    :root {
+        --text: rgb(0, 0, 0);
+        --placeholder: #2c2c2c;
+
+        --bg-color: #ffffff;
+        --color-1: #ffffff;
+
+        --text-size1: 48px;
+        --text-size2: 30px;
+        --text-size3: 24px;
+        --text-size4: 16px;
+    }
 }
+
 
 .form,
 .task {
@@ -15,7 +29,7 @@
     -moz-box-shadow: -1px 3px 31px -11px rgba(0, 0, 0, 0.51);
 }
 
-.note{
+.note {
     margin: auto;
     border-radius: 8px;
     position: absolute;
@@ -23,7 +37,7 @@
     bottom: 0;
     right: 0;
     left: 0;
-    background-color: #242424;
+    background-color: var(--bg-color);
     width: 30%;
     height: 80%;
 }
